@@ -1,18 +1,18 @@
 {% extends 'Layout/header.html.twig' %}
 
-{% block title %}Forgotten Password!{% endblock %}
+{% block title %}Mot de pass oublié{% endblock %}
 
 {% block main %}
     <section class="container mt-5 mb-5">
         <form method="post">
 
-            <h1 class="h3 mb-3 font-weight-normal">Reset Password</h1>
-            <label for="inputPassword" class="sr-only">Password</label>
+            <h1 class="h3 mb-3 font-weight-normal">Modifier vôtre mot de passe</h1>
+            <label for="inputPassword" class="sr-only">Mot de passe</label>
             <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
             <input type="hidden" name="token" value="{{ token }}">
 
             <button class="btn btn-lg btn-primary" type="submit">
-                Register
+                Enregistrer
             </button>
         </form>
     </section>

@@ -1,0 +1,43 @@
+{% extends 'Layout/header.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block main %}
+    <section class="container mt-5 mb-5">
+        <div class="mx-auto">
+            <h1 class="text-center">Profile</h1>
+
+            {% if user is not empty %}
+
+                <div class="d-flex justify-content-center m-3  pt-3">
+                    <img class="w-50 " src="{{ user.0.image }}">
+                </div>
+                <p class="text-center">Pseudo : {{ user.0.username }}</p>
+                <div class="d-flex flex-md-row flex-column">
+                    <div class="col-md-6 col-12 border border pt-4 pb-4">
+                        <p class="text-center">5 dernières figures mise en ligne : </p>
+
+
+                        <ul class="list-group">
+                        {% for tricks in user.0.tricks|slice(0, 5) %}
+                            <li class="list-group-item">
+                                <a href="{{ path('app_showtricks', {'tricks': tricks.name}) }}">{{ tricks.name }}</a>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="col-md-6 col-12 border border pt-4 pb-4">
+                        <p class="pt-3 pt-md-0 text-center">5 derniers commentaires mis en ligne : </p>
+                        <ul class="list-group">
+                        {% for commentaries in user.0.comments|slice(0, 5) %}
+                            <li class="list-group-item">
+                                <a href="{{ path('app_showtricks', {'tricks': commentaries.tricks.name}) }}">{{ commentaries.commentarie }}</a>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

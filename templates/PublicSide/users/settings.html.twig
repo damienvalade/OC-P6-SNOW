@@ -1,0 +1,71 @@
+{% extends 'Layout/header.html.twig' %}
+
+{% block title %}Settings{% endblock %}
+
+{% block customcss %}
+    {{ encore_entry_link_tags('css/cropper') }}
+{% endblock %}
+
+{% block main %}
+    <section class="container mt-5 mb-5">
+        <div class="mx-auto">
+            <h1 class="text-center">Settings</h1>
+
+            {% if user is not empty %}
+
+                <p class="text-center">Pseudo : {{ user.username }}</p>
+                {{ form_start(registrationForm, {"attr": {'id': 'form_update', 'class': 'form_group'}}) }}
+                <div class="d-flex justify-content-center m-3  pt-3 clearfix position-relative">
+                    <img class="w-50 rounded avatar" id="avatar" src="{{ user.image }}">
+                    <label class="position-absolute bg-light rounded px-2 py-1 left-0 bottom-0 ml-2 mb-2 cursor-pointer">
+                        {{ form_row(registrationForm.image, {
+                            "label": false,
+                            "attr": {
+                                'class': 'd-none'
+                            }
+                        }) }}
+                        <i class="fa fa-pencil-square-o"></i><span class="ml-1">Edit</span>
+                    </label>
+                </div>
+
+                <div class="mx-auto col-6">
+                    <div class="border pt-4 pb-4 pl-2 pr-2">
+
+                        {{ form_row(registrationForm.email, {
+                            "label": "Email",
+                            "attr": {
+                                "placeholder": "Email",
+                                "value": user.email,
+                                'class': 'form-control'
+                            },
+                            "label_attr": {
+                                'class': 'mt-2'
+                            }
+                        }) }}
+                        {{ form_row(registrationForm.plainPassword, {
+                            "label": "Mot de passe",
+                            "attr": {
+                                'placeholder': 'Mot de passe',
+                                'class': 'form-control'
+                            },
+                            "label_attr": {
+                                'class': 'mt-2'
+                            }
+                        }) }}
+
+                    </div>
+                    <button class="btn btn-dark mt-2">Update</button>
+                    {{ form_end(registrationForm) }}
+                </div>
+
+            {% endif %}
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block script %}
+
+    {{ encore_entry_script_tags('js/app') }}
+
+{% endblock %}

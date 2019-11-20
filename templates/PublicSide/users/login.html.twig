@@ -1,0 +1,32 @@
+{% extends 'Layout/header.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block main %}
+    <section class="container mt-5 mb-5">
+        <form method="post" class="mx-auto col-md-5">
+            {% if error %}
+                <div class="alert alert-danger mb-2">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+
+            {% if app.user %}
+                <div class="checkbox mb-3">You are logged in as {{ app.user.username }}, <a
+                            href="{{ path('app_logout') }}">Logout</a></div>
+            {% endif %}
+
+            <h1 class="mb-5 font-weight-normal text-center">Connexion</h1>
+            <label for="inputUsername" class="mt-2">Username</label>
+            <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control"
+                   placeholder="Username" required autofocus>
+            <label for="inputPassword" class="mt-2">Password</label>
+            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password"
+                   required>
+
+            <input type="hidden" name="_csrf_token"
+                   value="{{ csrf_token('authenticate') }}"
+            >
+
+            <button class="btn btn-dark mt-5" type="submit">Sign in</button>
+        </form>
+    </section>
+{% endblock %}

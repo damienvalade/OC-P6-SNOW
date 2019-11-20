@@ -1,0 +1,78 @@
+{% extends 'Layout/header.html.twig' %}
+
+{% block title %}Show Tricks{% endblock %}
+
+{% block main %}
+
+    <main class="container mt-5 mb-5">
+        <section class="mx-auto row d-flex flex-md-row justify-content-md-between justify-content-center" id="list">
+            {% for tricks in tricks %}
+                <div class="card mt-4" style="width: 18rem;">
+                    <a href=""
+                       class="text-decoration-none arrow-color">
+                        <img src="{{ tricks.name|namePicture('250-150') }}" class="card-img-top" alt="{{ tricks.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">{{ tricks.name }}</h5>
+                        </div>
+                    </a>
+                    {% if is_granted(constant("App\\Entity\\Users::ROLE_ADMIN")) %}
+                        <form action="{{ path('app_deletetricks') }}" method="post" class="">
+
+                            <a href="{{ path('app_edittricks', {'id_tricks': tricks.id}) }}"
+                               class="btn btn-dark float-left m-2"><i class="fa fa-pencil"></i></a>
+
+                            <button value="{{ tricks.id }}" id="delete" name="delete"
+                                    class="btn btn-dark ml-2 float-right m-2" type="submit">
+                                <i class="fa fa-times"></i></button>
+                        </form>
+
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </section>
+
+        {% if pagination.nbPages > 0 %}
+            <ul class="pagination">
+                {% if pagination.page > 1 %}
+                    <li>
+                        <a href="{{ path(pagination.nomRoute, pagination.paramsRoute|merge({'page': 1})) }}">
+                            <<
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path(pagination.nomRoute,
+                            pagination.paramsRoute|merge({'page': pagination.page-1})) }}">
+                            <
+                        </a>
+                    </li>
+                {% endif %}
+
+                {# Affichage de toutes les pages entre p-4 et p+4 sauf si < 1 ou > nbPages #}
+                {% for p in range(max(pagination.page-4, 1), min(pagination.page+4, pagination.nbPages)) %}
+                    <li {% if p == pagination.page %}class="active"{% endif %}>
+                        <a href="{{ path(pagination.nomRoute, pagination.paramsRoute|merge({'page': p})) }}">
+                            {{ p }}
+                        </a>
+                    </li>
+                {% endfor %}
+
+                {% if pagination.page < pagination.nbPages %}
+                    <li>
+                        <a href="{{ path(pagination.nomRoute,
+                            pagination.paramsRoute|merge({'page': pagination.page+1})) }}">
+                            >
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path(pagination.nomRoute,
+                            pagination.paramsRoute|merge({'page': pagination.nbPages})) }}">
+                            >>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        {% endif %}
+
+    </main>
+
+{% endblock %}

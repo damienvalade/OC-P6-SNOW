@@ -1,0 +1,54 @@
+{# **************** #}
+{# **** Navbar **** #}
+{# **************** #}
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <a class="navbar-brand" href="/">
+        <img style="width: 12rem;" src="/img/logo/SnowTriksOnly.png" alt="">
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+            aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_home') }}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_trickslist', {'page': 1}) }}">Triks</a>
+            </li>
+            {% if app.user is not null %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                        <img class="radius-50 icon-pp" src="{{ app.user.image }}" alt="">
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right ">
+                        <h6 class="text-center mt-2 mb-2"></h6>
+                        {% if is_granted(constant("App\\Entity\\Users::ROLE_ADMIN")) %}
+                            <a class="dropdown-item" href="{{ path('app_usersadministration') }}">Dashboard</a>
+                        {% endif %}
+                        <a class="dropdown-item" href="{{ path('app_settings') }}">Settings</a>
+                        <a class="dropdown-item mb-2" href="{{ path('app_logout') }}">Déconnexion</a>
+                    </div>
+
+                </li>
+            {% endif %}
+            {% if app.user is null %}
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href=""><i class="fa fa-sign-in"></i></a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href=""><i class="fa fa-user-plus"></i></a>
+                </li>
+            {% endif %}
+
+        </ul>
+    </div>
+</nav>

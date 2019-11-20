@@ -73,3 +73,13 @@ body {
     background-size: cover;
     height: 50vh;
 }
+
+.page-item.active .page-link{
+    background-color : #00FFB1;
+    border-color : #00FFB1;
+    color : white;
+}
+
+.page-link{
+    color : #00FFB1;
+}

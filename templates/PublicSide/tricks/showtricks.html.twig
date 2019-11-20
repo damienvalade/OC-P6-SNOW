@@ -1,0 +1,46 @@
+{% extends 'Layout/header.html.twig' %}
+
+{% block title %}Show Tricks{% endblock %}
+
+{% block main %}
+
+    <main>
+        <section class="mx-auto container-fluid w-100 p-0" id="list">
+            <div class="hero-image">
+                <div class="img-tricks" style="background-image: url({{ tricks.mainpicture }});">
+                </div>
+            </div>
+            <div class="card-body">
+                <h2 class="card-title text-center">{{ tricks.name }}</h2>
+            </div>
+        </section>
+        <div class="container">
+            <div class="row">
+                <section class="col-12 col-sm-6">
+                    <div class="mx-auto row d-flex flex-md-row justify-content-md-between justify-content-center">
+                        {% for pictures in tricks.pictures %}
+                            <div class="card card-tricks-size mt-4 mb-4">
+                                <img class="card-img-top" src="{{ pictures.url }}" alt="{{ tricks.name }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+                <section class="col-12 col-sm-6">
+                    <div class="mx-auto row d-flex flex-md-row justify-content-md-between justify-content-center">
+                        {% for videos in tricks.videos %}
+                            <div class="card card-tricks-size mt-4 mb-4">
+                                <iframe class="item-tricks" src="{{ videos.url }}" frameborder="0"></iframe>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+            </div>
+            <section>
+                <p>{{ tricks.typetricks.nametricks }}</p>
+                <p>{{ tricks.description }}</p>
+            </section>
+        </div>
+    </main>
+
+{% endblock %}

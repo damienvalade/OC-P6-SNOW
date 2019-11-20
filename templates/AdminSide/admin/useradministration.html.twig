@@ -1,0 +1,73 @@
+{% extends 'Layout/header.html.twig' %}
+
+{% block title %}Users Administration{% endblock %}
+
+{% block main %}
+    <main class="container mt-5 mb-5">
+        <section class="container mt-5 mb-5">
+            <div class="mx-auto">
+                <h1 class="text-center">User Administration</h1>
+
+                {% if user is not empty %}
+                    <div class=" table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr class="text-center">
+                                <th scope="col">#</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Role</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{ form_start(registrationForm, {"attr": {'class': 'form_group'}}) }}
+                            {% for user in user %}
+                                <tr>
+
+                                    <th scope="row">{{ user.id }}</th>
+                                    <td><img class="icon-pp" src="{{ user.image }}"/></td>
+                                    <td>{{ user.username }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>
+
+
+                                        {% set isRoles = _context[ 'registrationForm' ] %}
+                                        {% set current = 'isRoles' %}
+                                        {% set number = loop.index - 1 %}
+
+                                        {{ form_widget( isRoles.children[current ~ number] , {
+                                            "label": false,
+                                            "attr": {
+                                                'class': 'form-control form-group-item'
+                                            },
+                                            "label_attr": {
+                                                'class': 'mt-2'
+                                            },
+                                            'value' : user.leveladministration.0 ~ ''
+                                        }) }}
+                                    </td>
+                                    <td class="d-flex justify-content-center">
+                                        <button value="{{ user.username }}%{{ current ~ number }}" id="update"
+                                                name="update" class="btn btn-dark"
+                                                type="submit"><i class="fa fa-check"></i></button>
+                                        <button value="{{ user.username }}" id="delete" name="delete"
+                                                class="btn btn-dark ml-2" type="submit"><i
+                                                    class="fa fa-times"></i></button>
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+                            {{ form_end(registrationForm) }}
+                            </tbody>
+                        </table>
+                    </div>
+
+                {% endif %}
+
+            </div>
+        </section>
+    </main>
+{% endblock %}

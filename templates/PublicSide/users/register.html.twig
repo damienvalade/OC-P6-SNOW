@@ -1,0 +1,56 @@
+{% extends 'Layout/header.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block main %}
+    <main class="container mt-5 mb-5">
+        <section class="mx-auto col-md-5">
+            <h1 class="text-center mb-5">Inscription</h1>
+
+            {{ form_start(registrationForm, {"attr": {'class': 'form_group'}}) }}
+            {{ form_row(registrationForm.username, {
+                "label": "Nom utilisateur",
+                "attr": {
+                    "placeholder": "Nom utilisateur",
+                    'class': 'form-control'
+                },
+                "label_attr": {
+                    'class': 'mt-2'
+                }
+            }) }}
+            {{ form_row(registrationForm.email, {
+                "label": "Email",
+                "attr": {
+                    "placeholder": "Email",
+                    'class': 'form-control'
+                },
+                "label_attr": {
+                    'class': 'mt-2'
+                }
+            }) }}
+            {{ form_row(registrationForm.plainPassword, {
+                "label": "Mot de passe",
+                "attr": {
+                    'placeholder': 'Mot de passe',
+                    'class': 'form-control'
+                },
+                "label_attr": {
+                    'class': 'mt-2'
+                }
+            }) }}
+            {{ form_row(registrationForm.agreeTerms, {
+                "label": "En vous inscrivant, vous confirmez avoir lu, compris et accepter les Conditions d'utilisation et la
+        Politique de confidentialité ainsi qu'être informé(e) de votre droit à l'information.",
+                "attr": {
+                    'class': 'mb-5'
+                },
+                "label_attr": {
+                    'class': 'mt-5'
+                }
+            }) }}
+
+            <button class="btn btn-dark">Register</button>
+            {{ form_end(registrationForm) }}
+        </section>
+    </main>
+{% endblock %}

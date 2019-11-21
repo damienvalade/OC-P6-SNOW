@@ -51,7 +51,7 @@ class TricksRepository extends ServiceEntityRepository
     }
     */
 
-    public function findAllPagineEtTrie($page, $nbMaxParPage)
+    public function paginator($page, $nbMaxParPage)
     {
         if (!is_numeric($page)) {
             throw new InvalidArgumentException(
@@ -80,7 +80,7 @@ class TricksRepository extends ServiceEntityRepository
         $paginator = new Paginator($query);
 
         if ( ($paginator->count() <= $premierResultat) && $page != 1) {
-            throw new NotFoundHttpException('La page demandée n\'existe pas.'); // page 404, sauf pour la première page
+            throw new NotFoundHttpException('La page demandée n\'existe pas.');
         }
 
         return $paginator;

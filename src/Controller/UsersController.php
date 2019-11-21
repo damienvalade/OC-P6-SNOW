@@ -171,7 +171,7 @@ class UsersController extends AbstractController
                 ->setFrom('d.valade87@gmail.com')
                 ->setTo($user->getEmail())
                 ->setBody(
-                    "blablabla voici le token pour reseter votre mot de passe : " . $url,
+                    "Voici le token pour reset votre mot de passe : " . $url,
                     'text/html'
                 );
 

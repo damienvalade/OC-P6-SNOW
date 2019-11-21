@@ -28,7 +28,7 @@ class TricksController extends AbstractController
             $page = 1;
         }
 
-        $tricks = $trick->findAllPagineEtTrie($page,'5');
+        $tricks = $trick->paginator($page,'5');
 
         $pagination = array(
             'page' => $page,

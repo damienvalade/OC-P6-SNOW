@@ -37,7 +37,7 @@ class TricksController extends AbstractController
             'paramsRoute' => array()
         );
 
-        return $this->render('PublicSide/tricks/trickslist.html.twig',
+        return $this->render('PublicSide/tricks/listingTricks.html.twig',
             [
                 'tricks' => $tricks,
                 'pagination' => $pagination

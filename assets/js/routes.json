@@ -1,0 +1,1 @@
+{"base_url":"","routes":{"app_settings":{"tokens":[["text","\/settings"]],"defaults":[],"requirements":[],"hosttokens":[],"methods":["GET","POST"],"schemes":[]}},"prefix":"","host":"localhost","port":"","scheme":"http","locale":[]}

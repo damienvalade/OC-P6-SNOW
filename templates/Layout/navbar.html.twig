@@ -29,12 +29,11 @@
                     <div class="dropdown-menu dropdown-menu-right ">
                         <h6 class="text-center mt-2 mb-2"></h6>
                         {% if is_granted(constant("App\\Entity\\Users::ROLE_ADMIN")) %}
-                            <a class="dropdown-item" href="{{ path('app_usersadministration') }}">Dashboard</a>
+                            <a class="dropdown-item" href="">Dashboard</a>
                         {% endif %}
                         <a class="dropdown-item" href="{{ path('app_settings') }}">Settings</a>
                         <a class="dropdown-item mb-2" href="{{ path('app_logout') }}">Déconnexion</a>
                     </div>
-
                 </li>
             {% endif %}
             {% if app.user is null %}
@@ -47,6 +46,10 @@
                     <a class="nav-link"
                        href="{{ path('app_register') }}"><i class="fa fa-user-plus"></i></a>
                 </li>
+            {% endif %}
+
+            {% if is_granted(constant("App\\Entity\\Users::ROLE_ADMIN")) %}
+                <a class="nav-link" href="{{ path('app_addtricks', {'page': 1}) }}">AddTricks</a>
             {% endif %}
 
         </ul>

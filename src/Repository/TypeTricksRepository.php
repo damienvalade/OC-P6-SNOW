@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\TypeTricks;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -14,9 +15,18 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class TypeTricksRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, TypeTricks::class);
+    }
+
+    public function getTricksType()
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.name_tricks')
+            ->getQuery()
+            ->getResult()
+            ;
     }
 
     // /**

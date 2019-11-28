@@ -45,12 +45,12 @@ class Tricks
     private $users;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Video", mappedBy="tricks", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Video", mappedBy="tricks", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $videos;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Picture", mappedBy="tricks", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Picture", mappedBy="tricks", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $pictures;
 

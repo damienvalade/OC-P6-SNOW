@@ -2,17 +2,17 @@ import Cropper from "cropperjs/dist/cropper";
 import Routing from "../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router";
 import Routes from "./routes";
 
-import axios from "axios"
+import axios from "axios";
 
 Routing.setRoutingData(Routes);
 
 var cropper;
 var preview = document.getElementById("avatar");
-var file_input = document.getElementById("update_form_image");
+var fileInput = document.getElementById("update_form_image");
 
 window.previewFile = function () {
 
-    let file = file_input.files[0];
+    let file = fileInput.files[0];
     let reader = new FileReader();
 
     reader.addEventListener("load", function (event) {
@@ -37,23 +37,12 @@ window.previewFile = function () {
     })
 };
 
-let form = document.getElementById("form_update");
-form.addEventListener('submit', function (event) {
-    event.preventDefault();
-    cropper.getCroppedCanvas({
-        maxHeight: 1000,
-        maxWidth: 1000
-    }).toBlob(function (blob) {
-        ajaxWithAxios(blob);
-    })
-});
-
 function ajaxWithAxios(blob) {
     let url = Routing.generate("app_settings");
     let data = new FormData(form);
     data.append("file", blob);
     axios({
-        method: 'POST',
+        method: "POST",
         url: url,
         data: data,
         headers: {"X-Requested-With": "XMLHttpRequest"}
@@ -65,6 +54,17 @@ function ajaxWithAxios(blob) {
             }
         })
         .catch((error) => {
-            console.error(error);
+            return("error");
         });
 }
+
+let form = document.getElementById("form_update");
+form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    cropper.getCroppedCanvas({
+        maxHeight: 1000,
+        maxWidth: 1000
+    }).toBlob(function (blob) {
+        ajaxWithAxios(blob);
+    })
+});

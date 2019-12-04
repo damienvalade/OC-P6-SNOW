@@ -37,6 +37,17 @@ window.previewFile = function () {
     })
 };
 
+let form = document.getElementById("form_update");
+form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    cropper.getCroppedCanvas({
+        maxHeight: 1000,
+        maxWidth: 1000
+    }).toBlob(function (blob) {
+        ajaxWithAxios(blob);
+    });
+});
+
 function ajaxWithAxios(blob) {
     let url = Routing.generate("app_settings");
     let data = new FormData(form);
@@ -54,17 +65,6 @@ function ajaxWithAxios(blob) {
             }
         })
         .catch((error) => {
-            return("error");
+            return ("error");
         });
 }
-
-let form = document.getElementById("form_update");
-form.addEventListener("submit", function (event) {
-    event.preventDefault();
-    cropper.getCroppedCanvas({
-        maxHeight: 1000,
-        maxWidth: 1000
-    }).toBlob(function (blob) {
-        ajaxWithAxios(blob);
-    })
-});

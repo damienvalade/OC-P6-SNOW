@@ -1,5 +1,5 @@
 function handleDeleteButton() {
-    $("button[data-action='delete']").click(function(){
+    $("button[data-action='delete']").click(function () {
         const target = this.dataset.target;
         $(target).remove();
     });
@@ -13,19 +13,20 @@ function updateCounter() {
     $("#widgets-counter-video").val(countVideo);
 }
 
-$("#add-image").click(function(){
+$("#add-image").click(function () {
 
     const index = +$("#widgets-counter-image").val();
     const tmpl = $("#trick_pictures").data("prototype").replace(/__name__/g, index);
 
 
     $("#trick_pictures").append(tmpl);
+    let bsCustomFileInput;
     bsCustomFileInput.init();
     $("#widgets-counter-image").val(index + 1);
     handleDeleteButton();
 });
 
-$("#add-video").click(function(){
+$("#add-video").click(function () {
 
     const index = +$("#widgets-counter-video").val();
     const tmpl = $("#trick_videos").data("prototype").replace(/__name__/g, index);

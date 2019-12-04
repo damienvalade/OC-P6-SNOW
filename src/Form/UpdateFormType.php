@@ -16,6 +16,8 @@ class UpdateFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $options = [];
+
         $builder
             ->add('email', EmailType::class)
             ->add('plainPassword', PasswordType::class, [

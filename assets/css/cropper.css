@@ -14,6 +14,7 @@
     line-height: 0;
     position: relative;
     -ms-touch-action: none;
+    -ms-touch-action: none;
     touch-action: none;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -143,6 +144,14 @@
 
 .cropper-line {
     background-color: #39f;
+}
+
+.form-group{
+    margin: 0 !important;
+}
+
+.custom-file{
+    display : none !important;
 }
 
 .cropper-line.line-e {

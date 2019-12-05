@@ -33,8 +33,7 @@ window.previewFile = function () {
             rotatable: false,
             viewMode: 2
         })
-
-    })
+    });
 };
 
 let form = document.getElementById("form_update");

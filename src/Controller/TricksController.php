@@ -102,13 +102,14 @@ class TricksController extends AbstractController
 
     /**
      * @Route("/deletetricks", name="app_deletetricks")
+     * @param Request $request
      * @return Response
      */
-    public function delete(): Response
+    public function delete(Request $request): Response
     {
 
         $repository = $this->getDoctrine()->getRepository(Tricks::class);
-        $result = $repository->findOneBy(array('id' => $_POST['delete']));
+        $result = $repository->findOneBy(array('id' => $request->request->get('delete')));
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($result);

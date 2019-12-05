@@ -1,17 +1,19 @@
 {% extends 'Layout/header.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Connexion{% endblock %}
 
 {% block main %}
     <section class="container mt-5 mb-5">
         <form method="post" class="mx-auto col-md-5">
+
+
             {% if error %}
                 <div class="alert alert-danger mb-2">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
             {% endif %}
 
             {% if app.user %}
-                <div class="checkbox mb-3">You are logged in as {{ app.user.username }}, <a
-                            href="{{ path('app_logout') }}">Logout</a></div>
+                <div class="mx-auto mt-4 text-center checkbox mb-3 text-danger h3">Vous êtes déjà connecter {{ app.user.username }}, <a
+                            href="{{ path('app_logout') }}" class="text-decoration-none btn btn-danger">Déconnexion ?</a></div>
             {% endif %}
 
             <h1 class="mb-5 font-weight-normal text-center">Connexion</h1>
@@ -27,6 +29,11 @@
             >
 
             <button class="btn btn-dark mt-5" type="submit">Connexion</button>
+
         </form>
+
+        <div class="mx-auto mt-4 col-md-5 text-center">
+            <a href="{{ path('app_forgotten') }}">Mot de passe oublié ?</a>
+        </div>
     </section>
 {% endblock %}

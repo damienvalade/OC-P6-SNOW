@@ -78,7 +78,7 @@ class UsersController extends AbstractController
     public function settings(Request $request, UserPasswordEncoderInterface $passwordEncoder, Security $username): Response
     {
 
-        if (!is_null($username->getUser())) {
+        if ($username->getUser() === null) {
 
             $user = new Users();
 
@@ -127,16 +127,14 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route("/reset_token ", name="app_forgotten")
+     * @Route("/forgotten ", name="app_forgotten")
      * @param Request $request
-     * @param UserPasswordEncoderInterface $encoder
      * @param Swift_Mailer $mailer
      * @param TokenGeneratorInterface $tokenGenerator
      * @return Response
      */
     public function forgottenPassword(
         Request $request,
-        UserPasswordEncoderInterface $encoder,
         Swift_Mailer $mailer,
         TokenGeneratorInterface $tokenGenerator
     ): Response
@@ -198,7 +196,7 @@ class UsersController extends AbstractController
         if ($request->isMethod('POST')) {
             $entityManager = $this->getDoctrine()->getManager();
 
-            $user = $entityManager->getRepository(Users::class)->findOneByResetToken($token);
+            $user = $entityManager->getRepository(Users::class)->findOneBy(["reset_token" => $token]);
 
             if ($user === null) {
                 $this->addFlash('danger', 'Token Inconnu');
@@ -206,16 +204,16 @@ class UsersController extends AbstractController
             }
 
             $user->setResetToken(null);
-            $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
-            $entityManager->flush();
 
-            $this->addFlash('notice', 'Mot de passe mis à jour');
+            if($request->request->get('password') == $request->request->get('password2')){
+                $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
+                $entityManager->flush();
 
-            return $this->redirectToRoute('app_home');
-        } else {
+                $this->addFlash('notice', 'Mot de passe mis à jour');
 
-            return $this->render('PublicSide/users/reset.html.twig', ['token' => $token]);
+                return $this->redirectToRoute('app_home');
+            }
         }
-
+            return $this->render('PublicSide/users/reset.html.twig', ['token' => $token]);
     }
 }

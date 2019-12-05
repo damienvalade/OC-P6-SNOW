@@ -19,7 +19,7 @@ class UpdateFormType extends AbstractType
         $options = [];
 
         $builder
-            ->add('email', EmailType::class)
+            ->add('email', EmailType::class,['required'   => false])
             ->add('plainPassword', PasswordType::class, [
                 'mapped' => false,
                 'required'   => false,

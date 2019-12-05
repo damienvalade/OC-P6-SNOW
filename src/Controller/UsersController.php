@@ -8,6 +8,7 @@ use App\Form\UpdateFormType;
 use App\Repository\UsersRepository;
 use Swift_Mailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -78,7 +79,7 @@ class UsersController extends AbstractController
     public function settings(Request $request, UserPasswordEncoderInterface $passwordEncoder, Security $username): Response
     {
 
-        if ($username->getUser() === null) {
+        if ($username->getUser() !== null) {
 
             $user = new Users();
 
@@ -89,24 +90,29 @@ class UsersController extends AbstractController
             $form_update->handleRequest($request);
 
             if ($request->isXmlHttpRequest()) {
-                $result->setPassword(
-                    $passwordEncoder->encodePassword($user,
-                        $form_update->get('plainPassword')->getData()
-                    )
-                );
 
-                $result->setEmail($form_update->get('email')->getData());
+                if($form_update->get('plainPassword')->getData() !== null){
+                    $result->setPassword(
+                        $passwordEncoder->encodePassword($user,
+                            $form_update->get('plainPassword')->getData()
+                        )
+                    );
+                }
 
-                $file = $_FILES['file'];
+                if($form_update->get('email')->getData() !== null){
+                    $result->setEmail($form_update->get('email')->getData());
+                }
 
-                $file = new UploadedFile($file['tmp_name'], $file['name'], $file['type']);
-                $filename = $this->generateUniqueName() . '.' . $file->guessExtension();
+                $file = $request->files->get('file');
+
+                $filename = $file->getBasename() . '.' . $file->guessExtension();
                 $file->move(
-                    $this->getTargetDir() . $username->getUser()->getUsername() . '/',
+                    $this->getParameter('uploads_dir') . $username->getUser()->getUsername() . '/',
                     $filename
                 );
 
-                unlink(substr($username->getUser()->getImage(), 1));
+                $filesystem = new Filesystem();
+                $filesystem->remove(substr($username->getUser()->getImage(), 1));
 
                 $result->setImage('/img/pp/users/' . $username->getUser()->getUsername() . '/' . $filename);
 

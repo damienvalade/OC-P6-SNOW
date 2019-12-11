@@ -82,6 +82,15 @@ class TricksController extends AbstractController
             $entityManager->flush();
         }
 
+        if ($request->request->get('delete') !== null) {
+            $repository = $this->getDoctrine()->getRepository(Commentaries::class);
+            $result = $repository->findOneBy(array('id' => $request->request->get('delete')));
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($result);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_showtricks', array('tricks' => $tricks));
+        }
 
         return $this->render('PublicSide/tricks/showTricks.html.twig', ['tricks' => $data,
             'form' => $form->createView()]);

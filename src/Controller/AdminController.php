@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Commentaries;
 use App\Entity\Users;
 use App\Form\UpdateRoleType;
+use App\Repository\CommentariesRepository;
 use App\Repository\UsersRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,11 +29,13 @@ class AdminController extends AbstractController
             $form_update = $this->createForm(UpdateRoleType::class, $user_profile);
             $form_update->handleRequest($request);
             if ($form_update->isSubmitted() && $form_update->isValid()) {
+
+                $repository = $this->getDoctrine()->getRepository(Users::class);
+
                 if ($request->request->get('update') !== null) {
                     $post = explode('%', $request->request->get('update'));
                     $userName = $post[0];
                     $inputName = $post[1];
-                    $repository = $this->getDoctrine()->getRepository(Users::class);
                     $result = $repository->findOneBy(array('username' => $userName));
                     $Role = $form_update->get((string)$inputName)->getData();
                     $result->setRoles([$Role]);
@@ -40,12 +44,12 @@ class AdminController extends AbstractController
                     $entityManager->flush();
                 }
                 if ($request->request->get('delete') !== null) {
-                    $repository = $this->getDoctrine()->getRepository(Users::class);
                     $result = $repository->findOneBy(array('username' => $request->request->get('delete')));
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->remove($result);
                     $entityManager->flush();
                 }
+                return $this->redirectToRoute('app_usersadministration');
             }
             return $this->render('AdminSide/admin/usersManager.html.twig', [
                 'user' => $user_profile,
@@ -53,5 +57,47 @@ class AdminController extends AbstractController
             ]);
         }
         return $this->redirectToRoute('app_home');
+    }
+
+    /**
+     * @Route("/commenatariesadministration", name="app_commenatariesadministration")
+     * @param CommentariesRepository $commentaries
+     * @param Request $request
+     * @return Response
+     */
+
+    public function commentariesAdministration(CommentariesRepository $commentaries, Request $request)
+    {
+
+        $commentaries = $commentaries->findBy(array('is_valide' => '0'));
+
+        if ($request->request->get('valid') || $request->request->get('delete')) {
+
+            $repository = $this->getDoctrine()->getRepository(Commentaries::class);
+
+            if ($request->request->get('valid') !== null) {
+
+                $result = $repository->findOneBy(array('id' => $request->request->get('valid')));
+                $result->setIsvalide(true);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($result);
+                $entityManager->flush();
+            }
+
+            if ($request->request->get('delete') !== null) {
+                $result = $repository->findOneBy(array('id' => $request->request->get('delete')));
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->remove($result);
+                $entityManager->flush();
+            }
+
+            return $this->redirectToRoute('app_commenatariesadministration');
+        }
+
+
+        return $this->render('AdminSide/admin/commentariesManager.html.twig', [
+            'commentaries' => $commentaries
+        ]);
+
     }
 }

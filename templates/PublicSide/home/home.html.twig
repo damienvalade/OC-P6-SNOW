@@ -17,7 +17,7 @@
 
     <main class="container mt-5 mb-5">
         <section class="mx-auto row d-flex flex-md-row justify-content-md-between justify-content-center" id="list">
-            {% for tricks in tricks %}
+            {% for tricks in tricks | slice(0,5) %}
                 <div class="card mt-4" style="width: 18rem;">
                     <a href="{{ path('app_showtricks', {'tricks': tricks.name}) }}"
                        class="text-decoration-none arrow-color">
@@ -42,8 +42,37 @@
                 </div>
             {% endfor %}
         </section>
-        <section class="mx-auto mt-5 mb-5 text-center">
-            <a href="{{ path('app_trickslist', {'page': 1}) }}" class="text-decoration-none arrow-color">Voir Plus</a>
-        </section>
+        <div class="row text-center m-5">
+            <button id="loadMoreTricks" class="btn btn-dark col-md-6 col-8 mx-auto">Voir plus de Tricks</button>
+        </div>
     </main>
+{% endblock %}
+
+{% block script %}
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        click = 0;
+        function loadMoreTricks(event) {
+            event.preventDefault();
+            click++;
+            var start = 5 * click;
+            const url = "{{ path('app_home') }}/" + start;
+
+            axios.get(url).then(function(response) {
+                $("#list").append(response.data);
+            }).catch(function (error) {
+                if (response.status === 403) {
+                    window.alert("Vous n'êtes pas autorisé à effectuer cette action !");
+                }
+                else if (response.status === 404) {
+                    window.alert("La page appelé n'existe pas");
+                }
+                else {
+                    window.alert("Une erreur est survenue !");
+                }
+            });
+        }
+
+        document.getElementById("loadMoreTricks").addEventListener("click", loadMoreTricks);
+    </script>
 {% endblock %}

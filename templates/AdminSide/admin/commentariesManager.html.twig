@@ -1,0 +1,51 @@
+{% extends 'Layout/header.html.twig' %}
+
+{% block title %}Commentaries Administration{% endblock %}
+
+{% block main %}
+    <main class="container mt-5 mb-5">
+        <section class="container mt-5 mb-5">
+            <div class="mx-auto">
+                <h1 class="text-center">User Administration</h1>
+
+                <div class=" table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr class="text-center">
+                            <th scope="col">#</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Commentaire</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for commentaries in commentaries %}
+                            <tr>
+
+                                <th scope="col">{{ commentaries.id }}</th>
+                                <th scope="col">{{ commentaries.users.username }}</th>
+                                <th scope="col"><img src="{{ commentaries.users.image }}" class="icon-pp"></th>
+                                <th scope="col">{{ commentaries.users.email }}</th>
+                                <th scope="col">{{ commentaries.commentarie }}</th>
+                                <td class="d-flex justify-content-center">
+                                    <form method="post" action="">
+                                    <button value="{{ commentaries.id }}" id="valid"
+                                            name="valid" class="btn btn-dark"
+                                            type="submit"><i class="fa fa-check"></i></button>
+                                    <button value="{{ commentaries.id }}" id="delete" name="delete"
+                                            class="btn btn-dark ml-2" type="submit"><i
+                                                class="fa fa-times"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </section>
+    </main>
+{% endblock %}

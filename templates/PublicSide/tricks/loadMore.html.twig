@@ -1,0 +1,21 @@
+{% for commentaries in tricks.commentaries | slice(start, start + 5) %}
+    <div class="card flex-md-row flex-sm-column col-12 w-100 mt-4 mb-4">
+        <div class="col-2  mb-2 mt-2">
+            <img class="w-100" src="{{ commentaries.users.image }}"
+                 alt="{{ commentaries.users.username }}">
+        </div>
+        <div class="col-9 mb-2 mt-2">
+            <a class="text-decoration-none arrow-color"
+               href="{{ path('app_profile', {'username': commentaries.users.username}) }}">{{ commentaries.users.username }}</a>
+            <p class="mt-1">{{ commentaries.createat|date('Y-m-d H:i:s') }}</p>
+            <p>{{ commentaries.commentarie }}</p>
+        </div>
+        {% if is_granted(constant("App\\Entity\\Users::ROLE_ADMIN")) %}
+            <form method="post" class="col-1 mb-2 mt-2">
+                <button value="{{ commentaries.id }}" id="delete"
+                        name="delete" class="btn btn-dark ml-2 mx-auto m-2"
+                        type="submit"><i class="fa fa-times"></i></button>
+            </form>
+        {% endif %}
+    </div>
+{% endfor %}

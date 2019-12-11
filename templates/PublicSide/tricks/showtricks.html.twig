@@ -10,7 +10,7 @@
                 <div class="img-tricks" style="background-image: url({{ tricks.mainpicture }});">
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body mx-auto">
                 <h2 class="card-title text-center">{{ tricks.name }}</h2>
             </div>
         </section>
@@ -38,6 +38,10 @@
             </div>
             <section>
                 <p>{{ tricks.typetricks.nametricks }}</p>
+                <p><a class="text-decoration-none arrow-color"
+                      href="{{ path('app_profile', {'username': tricks.users.username}) }}">{{ tricks.users.username }}</a>
+                </p>
+                <p>{{ tricks.createat|date('Y-m-d H:i:s') }}</p>
                 <p>{{ tricks.description }}</p>
             </section>
             <section class="m-5">
@@ -46,20 +50,21 @@
                 <button class="btn btn-dark mt-2">Envoyer</button>
                 {{ form_end(form) }}
             </section>
-            <section class="row">
-                {% for commentaries in tricks.commentaries %}
+            <section class="row" id="comments">
+                {% for commentaries in tricks.commentaries | slice(0,5) %}
                     <div class="card flex-md-row flex-sm-column col-12 w-100 mt-4 mb-4">
                         <div class="col-2  mb-2 mt-2">
                             <img class="w-100" src="{{ commentaries.users.image }}"
                                  alt="{{ commentaries.users.username }}">
                         </div>
-                        <div class="col-9">
-                            <h3>{{ commentaries.users.username }}</h3>
-                            <p>{{ commentaries.createat|date('Y-m-d H:i:s') }}</p>
+                        <div class="col-9 mb-2 mt-2">
+                            <a class="text-decoration-none arrow-color"
+                               href="{{ path('app_profile', {'username': commentaries.users.username}) }}">{{ commentaries.users.username }}</a>
+                            <p class="mt-1">{{ commentaries.createat|date('Y-m-d H:i:s') }}</p>
                             <p>{{ commentaries.commentarie }}</p>
                         </div>
                         {% if is_granted(constant("App\\Entity\\Users::ROLE_ADMIN")) %}
-                            <form method="post" class="col-1">
+                            <form method="post" class="col-1 mb-2 mt-2">
                                 <button value="{{ commentaries.id }}" id="delete"
                                         name="delete" class="btn btn-dark ml-2 mx-auto m-2"
                                         type="submit"><i class="fa fa-times"></i></button>
@@ -68,7 +73,40 @@
                     </div>
                 {% endfor %}
             </section>
+            <div class="row text-center m-5">
+                <button id="loadMoreComments" class="btn btn-dark col-md-6 col-8 mx-auto">Voir plus de commentaires</button>
+            </div>
         </div>
     </main>
+
+{% endblock %}
+
+{% block script %}
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        click = 0;
+        function loadMoreComments(event) {
+            event.preventDefault();
+            click++;
+            var start = 5 * click;
+            const url = "{{ path('loadMoreComments', {'tricks': tricks.name} )}}/" + start;
+
+            axios.get(url).then(function(response) {
+                $("#comments").append(response.data);
+            }).catch(function (error) {
+                if (response.status === 403) {
+                    window.alert("Vous n'êtes pas autorisé à effectuer cette action !");
+                }
+                else if (response.status === 404) {
+                    window.alert("La page appelé n'existe pas");
+                }
+                else {
+                    window.alert("Une erreur est survenue !");
+                }
+            });
+        }
+
+        document.getElementById("loadMoreComments").addEventListener("click", loadMoreComments);
+    </script>
 
 {% endblock %}

@@ -97,6 +97,25 @@ class TricksController extends AbstractController
     }
 
     /**
+     * Get the 5 next comments in the database and create a Twig file with them that will be displayed via Javascript
+     *
+     * @Route("/trick/{tricks}/{start}", name="loadMoreComments", requirements={"start": "\d+"})
+     * @param TricksRepository $repo
+     * @param $tricks
+     * @param int $start
+     * @return Response
+     */
+    public function loadMoreComments(TricksRepository $repo, $tricks, $start = 5)
+    {
+        $tricks = $repo->findOneBy(array('name' => $tricks));
+
+        return $this->render('PublicSide/tricks/loadMore.html.twig', [
+            'tricks' => $tricks,
+            'start' => $start
+        ]);
+    }
+
+    /**
      * @Route("/edittricks/{id_tricks}", name="app_edittricks")
      * @param TricksRepository $tricksRepo
      * @param $id_tricks

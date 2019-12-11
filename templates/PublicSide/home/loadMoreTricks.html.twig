@@ -1,0 +1,24 @@
+{% for tricks in tricks %}
+    <div class="card mt-4" style="width: 18rem;">
+        <a href="{{ path('app_showtricks', {'tricks': tricks.name}) }}"
+           class="text-decoration-none arrow-color">
+            <img src="{{ tricks.name|namePicture('250-150') }}" class="card-img-top"
+                 alt="{{ tricks.name }}">
+            <div class="card-body">
+                <h5 class="card-title text-center">{{ tricks.name }}</h5>
+            </div>
+        </a>
+        {% if is_granted(constant("App\\Entity\\Users::ROLE_ADMIN")) %}
+            <form action="{{ path('app_deletetricks') }}" method="post" class="">
+
+                <a href="{{ path('app_edittricks', {'id_tricks': tricks.id}) }}"
+                   class="btn btn-dark float-left m-2"><i class="fa fa-pencil"></i></a>
+
+                <button value="{{ tricks.id }}" id="delete" name="delete"
+                        class="btn btn-dark ml-2 float-right m-2" type="submit">
+                    <i class="fa fa-times"></i></button>
+            </form>
+
+        {% endif %}
+    </div>
+{% endfor %}

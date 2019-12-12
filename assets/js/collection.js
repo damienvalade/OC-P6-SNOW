@@ -9,20 +9,19 @@ function updateCounter() {
     const count = +$("#trick_pictures div.form-group").length;
     const countVideo = +$("#trick_videos div.form-group").length;
 
-    $("#widgets-counter-image").val(count);
+    $("#widgets-counter-pictures").val(count);
     $("#widgets-counter-video").val(countVideo);
 }
 
-$("#add-image").click(function () {
+$("#add-pictures").click(function () {
 
-    const index = +$("#widgets-counter-image").val();
+    const index = +$("#widgets-counter-pictures").val();
     const tmpl = $("#trick_pictures").data("prototype").replace(/__name__/g, index);
 
 
     $("#trick_pictures").append(tmpl);
-    let bsCustomFileInput;
     bsCustomFileInput.init();
-    $("#widgets-counter-image").val(index + 1);
+    $("#widgets-counter-pictures").val(index + 1);
     handleDeleteButton();
 });
 

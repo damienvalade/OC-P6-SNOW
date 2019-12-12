@@ -11,7 +11,10 @@ use App\Form\CommentaryType;
 use App\Form\TrickType;
 use App\Repository\TricksRepository;
 use App\Repository\TypeTricksRepository;
+use App\Service\UploadImage;
+use App\Services\PicturesUploader;
 use Cassandra\Date;
+use Doctrine\Common\Persistence\ObjectManager;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -150,11 +153,12 @@ class TricksController extends AbstractController
     /**
      * @Route("/addtricks", name="app_addtricks")
      * @param Request $request
+     * @param PicturesUploader $uploadImage
      * @param Security $username
      * @return Response
      * @throws Exception
      */
-    public function add(Request $request, Security $username): Response
+    public function add(Request $request,PicturesUploader $uploadImage , Security $username): Response
     {
         $tricks = new Tricks();
 
@@ -164,14 +168,34 @@ class TricksController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $image = $form['file']->getData();
+
+            $mainImage = $tricks->setFile($image);
+            $mainImage = $uploadImage->saveMainPicture($mainImage);
+            $entityManager->persist($mainImage);
+
+            foreach($tricks->getPictures() as $picture)
+            {
+                $picture->setTricks($tricks);
+                $picture = $uploadImage->saveImage($picture, $tricks->getName());
+                $entityManager->persist($picture);
+            }
+
+            foreach($tricks->getVideos() as $video)
+            {
+                $video->setTricks($tricks);
+                $entityManager->persist($video);
+            }
+
             $tricks->setUsers($username->getUser());
             $tricks->setName($form->get('name')->getData());
             $tricks->setTypeTricks($form->get('type_tricks')->getData());
             $tricks->setDescription($form->get('description')->getData());
-            $tricks->setMainPicture($form->get('main_picture')->getData());
             $tricks->setCreateAt(new \DateTime());
 
-            $entityManager = $this->getDoctrine()->getManager();
+
             $entityManager->persist($tricks);
             $entityManager->flush();
 

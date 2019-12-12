@@ -8,8 +8,10 @@ use App\Form\VideoType;
 use App\Entity\Tricks;
 use App\Entity\TypeTricks;
 use App\Form\ApplicationType;
+use Symfony\Component\Console\Input\Input;
 use Symfony\Component\DomCrawler\Image;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -31,7 +33,7 @@ class TrickType extends AbstractType
                 'class' => TypeTricks::class,
                 'choice_label' => 'name_tricks'
             ])
-            ->add('main_picture', TextType::class)
+            ->add('file', FileType::class)
 
             ->add('pictures', CollectionType::class, array(
                 'entry_type'          => ImageType::class,

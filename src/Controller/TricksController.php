@@ -121,14 +121,57 @@ class TricksController extends AbstractController
     /**
      * @Route("/edittricks/{id_tricks}", name="app_edittricks")
      * @param TricksRepository $tricksRepo
+     * @param PicturesUploader $uploadImage
+     * @param Request $request
      * @param $id_tricks
+     * @param Security $username
      * @return Response
+     * @throws Exception
      */
-    public function edit(TricksRepository $tricksRepo, $id_tricks): Response
+    public function edit(TricksRepository $tricksRepo,PicturesUploader $uploadImage ,Request $request , $id_tricks, Security $username): Response
     {
-        $data = $tricksRepo->findOneBy(array('id' => $id_tricks));
+        $tricks = $tricksRepo->findOneBy(array('id' => $id_tricks));
 
-        return $this->render('PublicSide/tricks/editTricks.html.twig', ['tricks' => $data]);
+        $form = $this->createForm(TrickType::class, $tricks);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $image = $form['file']->getData();
+
+            $mainImage = $tricks->setFile($image);
+            $mainImage = $uploadImage->saveMainPicture($mainImage);
+            $entityManager->persist($mainImage);
+
+            foreach($tricks->getPictures() as $picture)
+            {
+                $picture->setTricks($tricks);
+                $picture = $uploadImage->saveImage($picture, $tricks->getName());
+                $entityManager->persist($picture);
+            }
+
+            foreach($tricks->getVideos() as $video)
+            {
+                $video->setTricks($tricks);
+                $entityManager->persist($video);
+            }
+
+            $tricks->setUsers($username->getUser());
+            $tricks->setName($form->get('name')->getData());
+            $tricks->setTypeTricks($form->get('type_tricks')->getData());
+            $tricks->setDescription($form->get('description')->getData());
+            $tricks->setCreateAt(new \DateTime());
+
+
+            $entityManager->persist($tricks);
+            $entityManager->flush();
+        }
+
+        return $this->render('PublicSide/tricks/editTricks.html.twig', [
+            'form' => $form->createView(),
+            'tricks' => $tricks
+        ]);
     }
 
     /**

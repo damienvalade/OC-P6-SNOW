@@ -2,6 +2,10 @@
 
 {% block title %}Show Tricks{% endblock %}
 
+{% block customcss %}
+    {{ encore_entry_link_tags('cropper_css') }}
+{% endblock %}
+
 {% form_theme form 'PublicSide/form/_collection.html.twig' %}
 
 {% block main %}
@@ -13,7 +17,22 @@
             {{ form_row(form.name) }}
             {{ form_row(form.type_tricks) }}
             {{ form_row(form.description) }}
-            {{ form_row(form.file) }}
+
+            <div class="d-flex justify-content-center m-3  pt-3 clearfix position-relative">
+                <img class="w-50 rounded avatar" id="avatar" src="{{ tricks.mainpicture }}" alt="">
+                <label class="position-absolute bg-light rounded px-2 py-1 left-0 bottom-0 ml-2 mb-2 cursor-pointer">
+                    <div class="d-none">
+                        {{ form_row(form.file, {
+                            "label": false,
+                            "attr": {
+                                'class' : 'd-none',
+                                'required' : false
+                            }
+                        }) }}
+                    </div>
+                    <i class="fa fa-pencil-square-o"></i><span class="ml-1">Edit</span>
+                </label>
+            </div>
 
             {{ form_row(form.pictures) }}
             {{ form_row(form.videos) }}

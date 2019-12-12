@@ -35,11 +35,11 @@ class TricksController extends AbstractController
     public function tricksList(TricksRepository $trick, $page): Response
     {
 
-        if($page === ''){
+        if ($page === '') {
             $page = 1;
         }
 
-        $tricks = $trick->paginator($page,'5');
+        $tricks = $trick->paginator($page, '5');
 
         $pagination = array(
             'page' => $page,
@@ -65,7 +65,7 @@ class TricksController extends AbstractController
      * @return Response
      * @throws Exception
      */
-    public function profile(TricksRepository $tricksRepo, $tricks,Request $request, Security $username): Response
+    public function profile(TricksRepository $tricksRepo, $tricks, Request $request, Security $username): Response
     {
         $data = $tricksRepo->findOneBy(array('name' => $tricks));
 
@@ -73,7 +73,7 @@ class TricksController extends AbstractController
         $form = $this->createForm(CommentaryType::class, $commentaries);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $commentaries->setUsers($username->getUser());
             $commentaries->setTricks($data);
             $commentaries->setCreateAt(new \DateTime());
@@ -128,31 +128,33 @@ class TricksController extends AbstractController
      * @return Response
      * @throws Exception
      */
-    public function edit(TricksRepository $tricksRepo,PicturesUploader $uploadImage ,Request $request , $id_tricks, Security $username): Response
+    public function edit(TricksRepository $tricksRepo, PicturesUploader $uploadImage, Request $request, $id_tricks, Security $username): Response
     {
         $tricks = $tricksRepo->findOneBy(array('id' => $id_tricks));
 
         $form = $this->createForm(TrickType::class, $tricks);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $entityManager = $this->getDoctrine()->getManager();
 
-            $image = $form['file']->getData();
-
-            $mainImage = $tricks->setFile($image);
-            $mainImage = $uploadImage->saveMainPicture($mainImage);
-            $entityManager->persist($mainImage);
-
-            foreach($tricks->getPictures() as $picture)
-            {
-                $picture->setTricks($tricks);
-                $picture = $uploadImage->saveImage($picture, $tricks->getName());
-                $entityManager->persist($picture);
+            if ($form['file']->getData() !== null) {
+                $image = $form['file']->getData();
+                $mainImage = $tricks->setFile($image);
+                $mainImage = $uploadImage->saveMainPicture($mainImage);
+                $entityManager->persist($mainImage);
             }
 
-            foreach($tricks->getVideos() as $video)
-            {
+
+            foreach ($tricks->getPictures() as $picture) {
+                $picture->setTricks($tricks);
+                if ($picture->getFilepicture() !== null) {
+                    $picture = $uploadImage->saveImage($picture, $tricks->getName());
+                    $entityManager->persist($picture);
+                }
+            }
+
+            foreach ($tricks->getVideos() as $video) {
                 $video->setTricks($tricks);
                 $entityManager->persist($video);
             }
@@ -201,7 +203,7 @@ class TricksController extends AbstractController
      * @return Response
      * @throws Exception
      */
-    public function add(Request $request,PicturesUploader $uploadImage , Security $username): Response
+    public function add(Request $request, PicturesUploader $uploadImage, Security $username): Response
     {
         $tricks = new Tricks();
 
@@ -209,7 +211,7 @@ class TricksController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $entityManager = $this->getDoctrine()->getManager();
 
@@ -219,15 +221,13 @@ class TricksController extends AbstractController
             $mainImage = $uploadImage->saveMainPicture($mainImage);
             $entityManager->persist($mainImage);
 
-            foreach($tricks->getPictures() as $picture)
-            {
+            foreach ($tricks->getPictures() as $picture) {
                 $picture->setTricks($tricks);
                 $picture = $uploadImage->saveImage($picture, $tricks->getName());
                 $entityManager->persist($picture);
             }
 
-            foreach($tricks->getVideos() as $video)
-            {
+            foreach ($tricks->getVideos() as $video) {
                 $video->setTricks($tricks);
                 $entityManager->persist($video);
             }

@@ -18,7 +18,7 @@ class ImageType extends AbstractType
         $options = [];
 
         $builder
-            ->add('filepicture', FileType::class)
+            ->add('filepicture', FileType::class, array('required' => false))
         ;
     }
 

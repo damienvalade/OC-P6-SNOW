@@ -4,7 +4,9 @@ namespace App\Form;
 
 use App\Entity\Picture;
 use App\Form\ApplicationType;
+use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,7 +18,7 @@ class ImageType extends AbstractType
         $options = [];
 
         $builder
-            ->add('url', TextType::class)
+            ->add('file', FileType::class)
         ;
     }
 

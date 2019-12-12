@@ -5,6 +5,8 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TricksRepository")
@@ -69,6 +71,14 @@ class Tricks
      * @ORM\Column(type="string", length=255)
      */
     private $main_picture;
+
+    /**
+     * @Assert\Image(
+     *  mimeTypes= {"image/jpeg", "image/jpg", "image/png"},
+     *  mimeTypesMessage = "Le fichier ne possède pas une extension valide ! Veuillez insérer une image en .jpg, .jpeg ou .png"
+     *  )
+     */
+    private $file;
 
 
     public function __construct()
@@ -259,5 +269,18 @@ class Tricks
 
         return $this;
     }
+
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    public function setFile(UploadedFile $file): self
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
 
 }

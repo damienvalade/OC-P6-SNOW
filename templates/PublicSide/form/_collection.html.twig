@@ -3,10 +3,10 @@
 
     {{ form_widget(form) }}
 
-    <input type="hidden" id="widgets-counter-image" value="0">
+    <input type="hidden" id="widgets-counter-pictures" value="0">
 
     <div class="form-group">
-        <button type="button" id="add-image" class="btn btn-info">Ajouter une image</button>
+        <button type="button" id="add-pictures" class="btn btn-info">Ajouter une image</button>
     </div>
 {% endblock %}
 
@@ -18,7 +18,7 @@
     <div class="form-group" id="block_{{ id }}">
     <div class="row">
         <div class="col-10">
-            {{ form_widget(form.url) }}
+            {{ form_widget(form.file) }}
         </div>
         <div class="col-2">
             <button type="button" data-action="delete" data-target="#block_{{id}}" class="btn btn-danger">X</button>

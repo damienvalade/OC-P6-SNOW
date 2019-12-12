@@ -5,8 +5,8 @@
 
     <input type="hidden" id="widgets-counter-pictures" value="0">
 
-    <div class="form-group">
-        <button type="button" id="add-pictures" class="btn btn-info">Ajouter une image</button>
+    <div class="form-group mb-3">
+        <button type="button" id="add-pictures" class="btn btn-info mt-2">Ajouter une image</button>
     </div>
 {% endblock %}
 
@@ -16,14 +16,39 @@
 
 {% block _trick_pictures_entry_widget %}
     <div class="form-group" id="block_{{ id }}">
-    <div class="row">
-        <div class="col-10">
-            {{ form_widget(form.filepicture) }}
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-center m-3  pt-3 clearfix position-relative">
+                    {% if form.filepicture.parent.vars.value.url is defined %}
+                    <img class="w-50 rounded avatar" id="avatar" src="{{ form.filepicture.parent.vars.value.url }}">
+                    <label class="position-absolute bg-light rounded px-2 py-1 left-0 bottom-0 ml-2 mb-2 cursor-pointer">
+                        <div class="d-none">
+                            {{ form_widget(form.filepicture, {
+                                "label": false,
+                                "attr": {
+                                    'class' : 'd-none',
+                                    'required' : false
+                                }
+                            }) }}
+                        </div>
+                        <i class="fa fa-pencil-square-o"></i><span class="ml-1">Edit</span>
+                        {% endif %}
+                        {{ form_widget(form.filepicture, {
+                            "label": false,
+                            "attr": {
+                                'class' : 'd-none',
+                                'required' : true
+                            }
+                        }) }}
+                    </label>
+                </div>
+
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <button type="button" data-action="delete" data-target="#block_{{ id }}" class="btn btn-danger mx-auto">X
+                </button>
+            </div>
         </div>
-        <div class="col-2">
-            <button type="button" data-action="delete" data-target="#block_{{id}}" class="btn btn-danger">X</button>
-        </div>
-    </div>
     </div>
 {% endblock %}
 
@@ -35,7 +60,7 @@
     <input type="hidden" id="widgets-counter-video" value="0">
 
     <div class="form-group">
-        <button type="button" id="add-video" class="btn btn-info">Ajouter une vidéo</button>
+        <button type="button" id="add-video" class="btn btn-info mt-2 mb-3">Ajouter une vidéo</button>
     </div>
 {% endblock %}
 
@@ -50,7 +75,8 @@
                 {{ form_widget(form.url) }}
             </div>
             <div class="col-2">
-                <button type="button" data-action="delete" data-target="#block_{{id}}" class="btn btn-danger">X</button>
+                <button type="button" data-action="delete" data-target="#block_{{ id }}" class="btn btn-danger">X
+                </button>
             </div>
         </div>
     </div>

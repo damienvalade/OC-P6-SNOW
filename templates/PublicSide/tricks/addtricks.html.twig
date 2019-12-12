@@ -13,8 +13,13 @@
             {{ form_row(form.name) }}
             {{ form_row(form.type_tricks) }}
             {{ form_row(form.description) }}
-            {{ form_row(form.file) }}
-
+            {{ form_row(form.file, {
+                "label": false,
+                "attr": {
+                    'class' : 'd-none',
+                    'required' : true
+                }
+            }) }}
             {{ form_row(form.pictures) }}
             {{ form_row(form.videos) }}
 

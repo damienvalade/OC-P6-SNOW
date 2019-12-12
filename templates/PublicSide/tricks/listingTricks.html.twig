@@ -4,6 +4,8 @@
 
 {% block main %}
 
+    {{ dump(tricks) }}
+
     <main class="container mt-5 mb-5">
         <section class="mx-auto row d-flex flex-md-row justify-content-md-between justify-content-center" id="list">
             {% for tricks in tricks %}

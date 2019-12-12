@@ -33,7 +33,7 @@ class TrickType extends AbstractType
                 'class' => TypeTricks::class,
                 'choice_label' => 'name_tricks'
             ])
-            ->add('file', FileType::class)
+            ->add('file', FileType::class, array('required' => false))
 
             ->add('pictures', CollectionType::class, array(
                 'entry_type'          => ImageType::class,

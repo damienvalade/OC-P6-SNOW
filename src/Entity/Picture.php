@@ -42,7 +42,7 @@ class Picture
      *  maxHeightMessage ="La hauteur de cette image est trop grande",
      *  )
      */
-    private $file;
+    private $filepicture;
 
 
     public function getId(): ?int
@@ -79,14 +79,14 @@ class Picture
         return $this->url;
     }
 
-    public function getFile()
+    public function getFilepicture()
     {
-        return $this->file;
+        return $this->filepicture;
     }
 
-    public function setFile(UploadedFile $file): self
+    public function setFilepicture(UploadedFile $file): self
     {
-        $this->file = $file;
+        $this->filepicture = $file;
 
         return $this;
     }

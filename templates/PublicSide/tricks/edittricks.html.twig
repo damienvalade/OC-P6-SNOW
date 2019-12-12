@@ -2,49 +2,30 @@
 
 {% block title %}Show Tricks{% endblock %}
 
-{% block main %}
+{% form_theme form 'PublicSide/form/_collection.html.twig' %}
 
+{% block main %}
     <main class="container mt-5 mb-5">
-        <section class="mx-auto row d-flex justify-content-between" id="list">
-            <img src="{{ tricks.mainpicture }}" class="card-img-top" alt="{{ tricks.name }}">
-            <div class="card-body">
-                <h5 class="card-title text-center">{{ tricks.name }}</h5>
-            </div>
-        </section>
-        <div class="row">
-            <section class="col-12 col-sm-6">
-                <div class="mx-auto row d-flex flex-md-row justify-content-md-between justify-content-center">
-                    {% for pictures in tricks.pictures %}
-                        <div class="card card-tricks-size mt-4 mb-4">
-                            <img class="card-img-top" src="{{ pictures.url }}" alt="{{ tricks.name }}">
-                            <div class="card-body">
-                                <i class="fa fa-pencil float-left ml-3"></i>
-                                <i class="fa fa-times float-right mr-3"></i>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </section>
-            <section class="col-12 col-sm-6">
-                <div class="mx-auto row d-flex flex-md-row justify-content-md-between justify-content-center">
-                    {% for videos in tricks.videos %}
-                        <div class="card card-tricks-size mt-4 mb-4">
-                            <iframe class="item-tricks" src="{{ videos.url }}" frameborder="0"></iframe>
-                            <div class="card-body">
-                                <i class="fa fa-pencil float-left ml-3"></i>
-                                <i class="fa fa-times float-right mr-3"></i>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </section>
-        </div>
-        <section>
-            <p>{{ tricks.typetricks.nametricks }}</p>
-        </section>
-        <section>
-            <p>{{ tricks.description }}</p>
+        <section class="mx-auto col-md-5">
+            <h1 class="text-center mb-5">Edition</h1>
+
+            {{ form_start(form) }}
+            {{ form_row(form.name) }}
+            {{ form_row(form.type_tricks) }}
+            {{ form_row(form.description) }}
+            {{ form_row(form.file) }}
+
+            {{ form_row(form.pictures) }}
+            {{ form_row(form.videos) }}
+
+
+            <button class="btn btn-dark mt-2">Envoyer</button>
+            {{ form_end(form) }}
         </section>
     </main>
+{% endblock %}
 
+{% block script %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('collection') }}
 {% endblock %}

@@ -4,15 +4,13 @@
 
 {% block main %}
 
-    {{ dump(tricks) }}
-
     <main class="container mt-5 mb-5">
         <section class="mx-auto row d-flex flex-md-row justify-content-md-between justify-content-center" id="list">
             {% for tricks in tricks %}
                 <div class="card mt-4" style="width: 18rem;">
                     <a href="{{ path('app_showtricks', {'tricks': tricks.name}) }}"
                     class="text-decoration-none arrow-color">
-                    <img src="{{ tricks.name|namePicture('250-150') }}" class="card-img-top" alt="{{ tricks.name }}">
+                    <img src="{{ tricks.mainpicture }}" class="card-img-top" alt="{{ tricks.name }}">
                     <div class="card-body">
                         <h5 class="card-title text-center">{{ tricks.name }}</h5>
                     </div>

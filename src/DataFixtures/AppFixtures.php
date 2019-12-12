@@ -41,7 +41,7 @@ class AppFixtures extends Fixture
             $user->setUsername($faker->userName)
                 ->setEmail($faker->safeEmail)
                 ->setPassword($this->encoder->encodePassword($user, 'password'))
-                ->setImage('https://randomuser.meapi/portraits/' . ($gender == 'male' ? 'men/' : 'women/') . $faker->numberBetween(1,99) . '.jpg')
+                ->setImage('https://randomuser.me/api/portraits/' . ($gender == 'male' ? 'men/' : 'women/') . $faker->numberBetween(1,99) . '.jpg')
                 ->setLevelAdministration((array)'ROLE_USER');
             $manager->persist($user);
             $users[] = $user;
@@ -71,7 +71,7 @@ class AppFixtures extends Fixture
             for ($k=1; $k<4; $k++)
             {
                 $image = new Picture();
-                $image->setUrl('img/tricks/' . $trick->getName() . ' ' . $k . '.jpg')
+                $image->setUrl('/img/tricks/default/default.png')
                     ->setTricks($trick);
 
                 $manager->persist($image);
@@ -89,7 +89,7 @@ class AppFixtures extends Fixture
             for ($l=0; $l<mt_rand(1, 2); $l++)
             {
                 $video = new Video();
-                $video->setUrl('https://www.youtube.com/watch?v=tHHxTHZwFUw')
+                $video->setUrl('https://www.youtube.com/embed/v1mI6KRkaQo')
                     ->setTricks($trick);
 
                 $manager->persist($video);

@@ -18,12 +18,14 @@
                 <div class="d-flex justify-content-center m-3  pt-3 clearfix position-relative">
                     <img class="w-50 rounded avatar" id="avatar" src="{{ user.image }}">
                     <label class="position-absolute bg-light rounded px-2 py-1 left-0 bottom-0 ml-2 mb-2 cursor-pointer">
-                        {{ form_row(registrationForm.image, {
-                            "label": false,
-                            "attr": {
-                                'class': 'd-none'
-                            }
-                        }) }}
+                        <div class="d-none">
+                            {{ form_row(registrationForm.image, {
+                                "label": false,
+                                "attr": {
+                                    'class': 'd-none'
+                                }
+                            }) }}
+                        </div>
                         <i class="fa fa-pencil-square-o"></i><span class="ml-1">Edit</span>
                     </label>
                 </div>

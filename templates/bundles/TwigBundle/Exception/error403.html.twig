@@ -1,0 +1,23 @@
+{# templates/bundles/TwigBundle/Exception/error404.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Error {{ status_code }} {% endblock %}
+
+{% block customcss %}<link href="/css/errors.css" rel="stylesheet">{% endblock %}
+
+{% block main %}
+
+    <section class="container mt-5 mb-5">
+        <h1>Forbidden</h1>
+        <section class="error-container">
+            <span>4</span>
+            <span><span class="screen-reader-text">0</span></span>
+            <span>3</span>
+        </section>
+
+        <div class="d-flex justify-content-center bd-highlight mb-3">
+            <a class="btn btn-primary" href="{{ path('app_home') }}">Retourner home</a>
+        </div>
+    </section>
+
+{% endblock %}

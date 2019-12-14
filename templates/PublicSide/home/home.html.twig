@@ -57,7 +57,7 @@
             event.preventDefault();
             click++;
             var start = 5 * click;
-            const url = "{{ path('app_home') }}/" + start;
+            const url = "{{ path('app_home')}}" + start;
 
             axios.get(url).then(function(response) {
                 $("#list").append(response.data);

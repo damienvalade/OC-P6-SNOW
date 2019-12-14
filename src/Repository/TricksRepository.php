@@ -71,7 +71,7 @@ class TricksRepository extends ServiceEntityRepository
         }
 
         $qb = $this->createQueryBuilder('a')
-            ->where('CURRENT_DATE() <= a.create_at')
+            ->where('CURRENT_DATE() >= a.create_at')
             ->orderBy('a.create_at', 'DESC');
 
         $query = $qb->getQuery();

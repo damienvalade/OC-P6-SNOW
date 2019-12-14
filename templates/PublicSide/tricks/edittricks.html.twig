@@ -19,7 +19,7 @@
             {{ form_row(form.description) }}
 
             <div class="d-flex justify-content-center m-3  pt-3 clearfix position-relative">
-                <img class="w-50 rounded avatar" id="avatar" src="{{ tricks.mainpicture }}" alt="">
+                <img class="w-100 rounded avatar" id="avatar" src="{{ tricks.mainpicture }}" alt="">
                 <label class="position-absolute bg-light rounded px-2 py-1 left-0 bottom-0 ml-2 mb-2 cursor-pointer">
                     <div class="d-none">
                         {{ form_row(form.file, {
@@ -47,4 +47,43 @@
 {% block script %}
     {{ parent() }}
     {{ encore_entry_script_tags('collection') }}
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#avatar').attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#trick_file").change(function(){
+            readURL(this);
+        });
+    </script>
+
+    {% for pictures in form.children.pictures.children %}
+
+        <script>
+            function {{ pictures.children.filepicture.vars.id }}(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#{{ pictures.children.filepicture.vars.id }}visual').attr('src', e.target.result);
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $("#{{ pictures.children.filepicture.vars.id }}").change(function () {
+                {{ pictures.children.filepicture.vars.id }}(this);
+            });
+        </script>
+    {% endfor %}
+
 {% endblock %}

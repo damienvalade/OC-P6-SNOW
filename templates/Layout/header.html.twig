@@ -32,7 +32,17 @@
 
 {% include "/Layout/navbar.html.twig" %}
 
-{% block main %} {% endblock %}
+{% for label, messages in app.flashes %}
+    <div class="container-fluid m-0 p-0 text-center">
+        <div class="alert alert-{{ label }} m-0">
+            {% for message in messages %}
+                <p class="m-0">{{ message | raw }}</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endfor %}
+
+{% block main %}{% endblock %}
 
 {% include "/Layout/footer.html.twig" %}
 

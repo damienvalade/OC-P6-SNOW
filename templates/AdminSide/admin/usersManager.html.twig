@@ -53,6 +53,7 @@
                                                 name="update" class="btn btn-dark"
                                                 type="submit"><i class="fa fa-check"></i></button>
                                         <button value="{{ user.username }}" id="delete" name="delete"
+                                                onclick="return confirm('Vous êtes sure de supprimer l\'utilisateur ?')"
                                                 class="btn btn-dark ml-2" type="submit"><i
                                                     class="fa fa-times"></i></button>
                                     </td>

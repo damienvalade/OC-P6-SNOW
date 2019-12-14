@@ -10,10 +10,11 @@
             <p class="mt-1">{{ commentaries.createat|date('Y-m-d H:i:s') }}</p>
             <p>{{ commentaries.commentarie }}</p>
         </div>
-        {% if is_granted(constant("App\\Entity\\Users::ROLE_ADMIN")) %}
+        {% if is_granted(constant("App\\Entity\\Users::ROLE_ADMIN") %}
             <form method="post" class="col-1 mb-2 mt-2">
                 <button value="{{ commentaries.id }}" id="delete"
                         name="delete" class="btn btn-dark ml-2 mx-auto m-2"
+                        onclick="return confirm('Vous êtes sure de supprimer le commentaire ?')"
                         type="submit"><i class="fa fa-times"></i></button>
             </form>
         {% endif %}

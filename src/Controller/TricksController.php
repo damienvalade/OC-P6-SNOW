@@ -170,12 +170,11 @@ class TricksController extends AbstractController
                 $entityManager->persist($tricks);
                 $entityManager->flush();
 
+                $this->addFlash(
+                    'success',
+                    'Modification du tricks : ' . $form->get('name')->getData() . ' [OK]'
+                );
             }
-
-            $this->addFlash(
-                'success',
-                'Modification du tricks : ' . $form->get('name')->getData() . ' [OK]'
-            );
 
             return $this->render('PublicSide/tricks/editTricks.html.twig', [
                 'form' => $form->createView(),

@@ -45,10 +45,12 @@
                 <p>{{ tricks.description }}</p>
             </section>
             <section class="m-5">
-                {{ form_start(form) }}
-                {{ form_row(form.commentarie) }}
-                <button class="btn btn-dark mt-2">Envoyer</button>
-                {{ form_end(form) }}
+                {% if is_granted(constant("App\\Entity\\Users::ROLE_ADMIN")) or is_granted(constant("App\\Entity\\Users::ROLE_USER")) %}
+                    {{ form_start(form) }}
+                    {{ form_row(form.commentarie) }}
+                    <button class="btn btn-dark mt-2">Envoyer</button>
+                    {{ form_end(form) }}
+                {% endif %}
             </section>
             <section class="row" id="comments">
                 {% for commentaries in tricks.commentaries | slice(0,5) %}
@@ -67,6 +69,7 @@
                             <form method="post" class="col-1 mb-2 mt-2">
                                 <button value="{{ commentaries.id }}" id="delete"
                                         name="delete" class="btn btn-dark ml-2 mx-auto m-2"
+                                        onclick="return confirm('Vous êtes sure de supprimer le tricks ?')"
                                         type="submit"><i class="fa fa-times"></i></button>
                             </form>
                         {% endif %}
@@ -74,7 +77,8 @@
                 {% endfor %}
             </section>
             <div class="row text-center m-5">
-                <button id="loadMoreComments" class="btn btn-dark col-md-6 col-8 mx-auto">Voir plus de commentaires</button>
+                <button id="loadMoreComments" class="btn btn-dark col-md-6 col-8 mx-auto">Voir plus de commentaires
+                </button>
             </div>
         </div>
     </main>
@@ -85,22 +89,21 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         click = 0;
+
         function loadMoreComments(event) {
             event.preventDefault();
             click++;
             var start = 5 * click;
-            const url = "{{ path('loadMoreComments', {'tricks': tricks.name} )}}/" + start;
+            const url = "{{ path('loadMoreComments', {'tricks': tricks.name} ) }}/" + start;
 
-            axios.get(url).then(function(response) {
+            axios.get(url).then(function (response) {
                 $("#comments").append(response.data);
             }).catch(function (error) {
                 if (response.status === 403) {
                     window.alert("Vous n'êtes pas autorisé à effectuer cette action !");
-                }
-                else if (response.status === 404) {
+                } else if (response.status === 404) {
                     window.alert("La page appelé n'existe pas");
-                }
-                else {
+                } else {
                     window.alert("Une erreur est survenue !");
                 }
             });

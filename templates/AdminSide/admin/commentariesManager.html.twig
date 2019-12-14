@@ -34,7 +34,7 @@
                                     <button value="{{ commentaries.id }}" id="valid"
                                             name="valid" class="btn btn-dark"
                                             type="submit"><i class="fa fa-check"></i></button>
-                                    <button value="{{ commentaries.id }}" id="delete" name="delete"
+                                    <button value="{{ commentaries.id }}" id="delete" onclick="return confirm('Vous êtes sure de supprimer le commentaire ?')" name="delete"
                                             class="btn btn-dark ml-2" type="submit"><i
                                                 class="fa fa-times"></i></button>
                                     </form>

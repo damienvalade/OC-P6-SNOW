@@ -130,69 +130,88 @@ class TricksController extends AbstractController
      */
     public function edit(TricksRepository $tricksRepo, PicturesUploader $uploadImage, Request $request, $id_tricks, Security $username): Response
     {
-        $tricks = $tricksRepo->findOneBy(array('id' => $id_tricks));
+        if ($username->isGranted('ROLE_USER') || $username->isGranted('ROLE_ADMIN')) {
+            $tricks = $tricksRepo->findOneBy(array('id' => $id_tricks));
 
-        $form = $this->createForm(TrickType::class, $tricks);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+            $form = $this->createForm(TrickType::class, $tricks);
+            $form->handleRequest($request);
 
-            $entityManager = $this->getDoctrine()->getManager();
+            if ($form->isSubmitted() && $form->isValid()) {
 
-            if ($form['file']->getData() !== null) {
-                $image = $form['file']->getData();
-                $mainImage = $tricks->setFile($image);
-                $mainImage = $uploadImage->saveMainPicture($mainImage);
-                $entityManager->persist($mainImage);
-            }
+                $entityManager = $this->getDoctrine()->getManager();
 
-
-            foreach ($tricks->getPictures() as $picture) {
-                $picture->setTricks($tricks);
-                if ($picture->getFilepicture() !== null) {
-                    $picture = $uploadImage->saveImage($picture, $tricks->getName());
-                    $entityManager->persist($picture);
+                if ($form['file']->getData() !== null) {
+                    $image = $form['file']->getData();
+                    $mainImage = $tricks->setFile($image);
+                    $mainImage = $uploadImage->saveMainPicture($mainImage);
+                    $entityManager->persist($mainImage);
                 }
+
+
+                foreach ($tricks->getPictures() as $picture) {
+                    $picture->setTricks($tricks);
+                    if ($picture->getFilepicture() !== null) {
+                        $picture = $uploadImage->saveImage($picture, $tricks->getName());
+                        $entityManager->persist($picture);
+                    }
+                }
+
+                foreach ($tricks->getVideos() as $video) {
+                    $video->setTricks($tricks);
+                    $entityManager->persist($video);
+                }
+
+                $tricks->setUsers($username->getUser());
+                $tricks->setName($form->get('name')->getData());
+                $tricks->setTypeTricks($form->get('type_tricks')->getData());
+                $tricks->setDescription($form->get('description')->getData());
+                $tricks->setCreateAt(new \DateTime());
+
+                $entityManager->persist($tricks);
+                $entityManager->flush();
+
             }
 
-            foreach ($tricks->getVideos() as $video) {
-                $video->setTricks($tricks);
-                $entityManager->persist($video);
-            }
+            $this->addFlash(
+                'success',
+                'Modification du tricks : ' . $form->get('name')->getData() . ' [OK]'
+            );
 
-            $tricks->setUsers($username->getUser());
-            $tricks->setName($form->get('name')->getData());
-            $tricks->setTypeTricks($form->get('type_tricks')->getData());
-            $tricks->setDescription($form->get('description')->getData());
-            $tricks->setCreateAt(new \DateTime());
-
-
-            $entityManager->persist($tricks);
-            $entityManager->flush();
+            return $this->render('PublicSide/tricks/editTricks.html.twig', [
+                'form' => $form->createView(),
+                'tricks' => $tricks
+            ]);
         }
-
-        return $this->render('PublicSide/tricks/editTricks.html.twig', [
-            'form' => $form->createView(),
-            'tricks' => $tricks
-        ]);
+        return $this->redirectToRoute('app_home');
     }
 
     /**
      * @Route("/deletetricks", name="app_deletetricks")
      * @param Request $request
+     * @param Security $user
      * @return Response
      */
-    public function delete(Request $request): Response
+    public function delete(Request $request, Security $user): Response
     {
+        if ($user->isGranted('ROLE_USER') || $user->isGranted('ROLE_ADMIN')) {
 
-        $repository = $this->getDoctrine()->getRepository(Tricks::class);
-        $result = $repository->findOneBy(array('id' => $request->request->get('delete')));
+            $repository = $this->getDoctrine()->getRepository(Tricks::class);
+            $result = $repository->findOneBy(array('id' => $request->request->get('delete')));
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($result);
-        $entityManager->flush();
+            $name = $result->getName();
 
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($result);
+            $entityManager->flush();
+
+            $this->addFlash(
+                'success',
+                'Suppression du tricks : ' . $name . ' [OK]'
+            );
+
+            return $this->redirectToRoute('app_home');
+        }
         return $this->redirectToRoute('app_home');
-
     }
 
     /**
@@ -200,54 +219,65 @@ class TricksController extends AbstractController
      * @param Request $request
      * @param PicturesUploader $uploadImage
      * @param Security $username
+     * @param Security $user
      * @return Response
      * @throws Exception
      */
-    public function add(Request $request, PicturesUploader $uploadImage, Security $username): Response
+    public function add(Request $request, PicturesUploader $uploadImage, Security $username, Security $user): Response
     {
-        $tricks = new Tricks();
 
-        $form = $this->createForm(TrickType::class, $tricks);
+        if ($user->isGranted('ROLE_USER') || $user->isGranted('ROLE_ADMIN')) {
 
-        $form->handleRequest($request);
+            $tricks = new Tricks();
 
-        if ($form->isSubmitted() && $form->isValid()) {
+            $form = $this->createForm(TrickType::class, $tricks);
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $form->handleRequest($request);
 
-            $image = $form['file']->getData();
+            if ($form->isSubmitted() && $form->isValid()) {
 
-            $mainImage = $tricks->setFile($image);
-            $mainImage = $uploadImage->saveMainPicture($mainImage);
-            $entityManager->persist($mainImage);
+                $entityManager = $this->getDoctrine()->getManager();
 
-            foreach ($tricks->getPictures() as $picture) {
-                $picture->setTricks($tricks);
-                $picture = $uploadImage->saveImage($picture, $tricks->getName());
-                $entityManager->persist($picture);
+                $image = $form['file']->getData();
+
+                $mainImage = $tricks->setFile($image);
+                $mainImage = $uploadImage->saveMainPicture($mainImage);
+                $entityManager->persist($mainImage);
+
+                foreach ($tricks->getPictures() as $picture) {
+                    $picture->setTricks($tricks);
+                    $picture = $uploadImage->saveImage($picture, $tricks->getName());
+                    $entityManager->persist($picture);
+                }
+
+                foreach ($tricks->getVideos() as $video) {
+                    $video->setTricks($tricks);
+                    $entityManager->persist($video);
+                }
+
+                $tricks->setUsers($username->getUser());
+                $tricks->setName($form->get('name')->getData());
+                $tricks->setTypeTricks($form->get('type_tricks')->getData());
+                $tricks->setDescription($form->get('description')->getData());
+                $tricks->setCreateAt(new \DateTime());
+
+
+                $entityManager->persist($tricks);
+                $entityManager->flush();
+
+                $this->addFlash(
+                    'success',
+                    'Ajout du tricks : ' . $form->get('name')->getData() . ' [OK]'
+                );
+
+                return $this->redirectToRoute('app_home');
             }
 
-            foreach ($tricks->getVideos() as $video) {
-                $video->setTricks($tricks);
-                $entityManager->persist($video);
-            }
+            return $this->render('PublicSide/tricks/addTricks.html.twig', [
+                'form' => $form->createView()
+            ]);
 
-            $tricks->setUsers($username->getUser());
-            $tricks->setName($form->get('name')->getData());
-            $tricks->setTypeTricks($form->get('type_tricks')->getData());
-            $tricks->setDescription($form->get('description')->getData());
-            $tricks->setCreateAt(new \DateTime());
-
-
-            $entityManager->persist($tricks);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_home');
         }
-
-        return $this->render('PublicSide/tricks/addTricks.html.twig', [
-            'form' => $form->createView()
-        ]);
-
+        return $this->redirectToRoute('app_home');
     }
 }

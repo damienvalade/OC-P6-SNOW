@@ -63,41 +63,43 @@ class AdminController extends AbstractController
      * @Route("/commenatariesadministration", name="app_commenatariesadministration")
      * @param CommentariesRepository $commentaries
      * @param Request $request
+     * @param Security $user
      * @return Response
      */
 
-    public function commentariesAdministration(CommentariesRepository $commentaries, Request $request)
+    public function commentariesAdministration(CommentariesRepository $commentaries, Request $request, Security $user)
     {
+        if ($user->isGranted('ROLE_ADMIN')) {
+            $commentaries = $commentaries->findBy(array('is_valide' => '0'));
 
-        $commentaries = $commentaries->findBy(array('is_valide' => '0'));
+            if ($request->request->get('valid') || $request->request->get('delete')) {
 
-        if ($request->request->get('valid') || $request->request->get('delete')) {
+                $repository = $this->getDoctrine()->getRepository(Commentaries::class);
 
-            $repository = $this->getDoctrine()->getRepository(Commentaries::class);
+                if ($request->request->get('valid') !== null) {
 
-            if ($request->request->get('valid') !== null) {
+                    $result = $repository->findOneBy(array('id' => $request->request->get('valid')));
+                    $result->setIsvalide(true);
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($result);
+                    $entityManager->flush();
+                }
 
-                $result = $repository->findOneBy(array('id' => $request->request->get('valid')));
-                $result->setIsvalide(true);
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($result);
-                $entityManager->flush();
+                if ($request->request->get('delete') !== null) {
+                    $result = $repository->findOneBy(array('id' => $request->request->get('delete')));
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->remove($result);
+                    $entityManager->flush();
+                }
+
+                return $this->redirectToRoute('app_commenatariesadministration');
             }
 
-            if ($request->request->get('delete') !== null) {
-                $result = $repository->findOneBy(array('id' => $request->request->get('delete')));
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->remove($result);
-                $entityManager->flush();
-            }
 
-            return $this->redirectToRoute('app_commenatariesadministration');
+            return $this->render('AdminSide/admin/commentariesManager.html.twig', [
+                'commentaries' => $commentaries
+            ]);
         }
-
-
-        return $this->render('AdminSide/admin/commentariesManager.html.twig', [
-            'commentaries' => $commentaries
-        ]);
-
+        return $this->redirectToRoute('app_home');
     }
 }

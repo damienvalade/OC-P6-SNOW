@@ -20,7 +20,8 @@
             <div class="col-12">
                 <div class="d-flex justify-content-center m-3  pt-3 clearfix position-relative">
                     {% if form.filepicture.parent.vars.value.url is defined %}
-                    <img class="w-50 rounded avatar" id="avatar" src="{{ form.filepicture.parent.vars.value.url }}">
+                    <img class="w-100 rounded avatar" id="{{ form.filepicture.vars.id }}visual"
+                         src="{{ form.filepicture.parent.vars.value.url }}">
                     <label class="position-absolute bg-light rounded px-2 py-1 left-0 bottom-0 ml-2 mb-2 cursor-pointer">
                         <div class="d-none">
                             {{ form_widget(form.filepicture, {
@@ -45,11 +46,13 @@
 
             </div>
             <div class="col-12 d-flex justify-content-center">
-                <button type="button" data-action="delete" data-target="#block_{{ id }}" class="btn btn-danger mx-auto">X
+                <button type="button" data-action="delete" data-target="#block_{{ id }}" class="btn btn-danger mx-auto">
+                    X
                 </button>
             </div>
         </div>
     </div>
+
 {% endblock %}
 
 {% block _trick_videos_widget %}

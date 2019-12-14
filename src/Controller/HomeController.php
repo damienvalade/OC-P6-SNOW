@@ -15,7 +15,7 @@ class HomeController extends AbstractController
     /**
      * Show the home page
      *
-     * @Route("/home", name="app_home")
+     * @Route("/", name="app_home")
      * @param TricksRepository $trick
      * @return Response
      */
@@ -33,7 +33,7 @@ class HomeController extends AbstractController
     /**
      * Get the 15 next tricks in the database and create a Twig file with them that will be displayed via Javascript
      *
-     * @Route("/home/{start}", name="app_loadMoreTricks", requirements={"start": "\d+"})
+     * @Route("/{start}", name="app_loadMoreTricks", requirements={"start": "\d+"})
      * @param TricksRepository $repo
      * @param int $start
      * @return Response

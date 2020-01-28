@@ -1,5 +1,7 @@
 # Blog OpenClassrooms
 
+![alt text](https://portfolio.damienvalade.fr/img/projects/Snowtricks.jpg)
+
 Projet OpenClassrooms site communautaire SnowTricks
 
 ## Informations du projet 
